@@ -61,6 +61,8 @@ function formatBytes(bytes) {
       const memUsagePercent = ((mem.buffcache / mem.total) * 100).toFixed(2);
       const memUseractive = formatBytes(mem.active);
       const battery = await si.battery();
+      let isCharging = battery.isCharging ? '充電中' : '未充電';
+      let timeRemaining = battery.timeRemaining ? `剩餘時間 : ${secondToTime('hours',battery.timeRemaining)}` : '';
       const network = await si.networkStats(si.defaultInterface);
       
       console.clear();
@@ -68,8 +70,8 @@ function formatBytes(bytes) {
       console.log(`CPU : ${cpu}%`);
       console.log(`記憶體 : ${memUseractive} / ${usedMem} / ${totalMem} (${memUsagePercent}%)[非積極]`);
       console.log(`系統運行時間 : ${secondToTime('',Math.floor(os.uptime()))}`);
-      console.log(`電池容量 : ${battery.percent}% ${battery.isCharging ? '充電中' : '未充電'} ${battery.timeRemaining ? `剩餘時間 : ${secondToTime('hours',battery.timeRemaining)}` : ''}`);
-      console.log(`網路 : ↓${formatBytes(network[0].rx_sec)}/s / ↑${formatBytes(network[0].tx_sec)}/s`);
+      console.log(`電池容量 : ${battery.percent}% ${isCharging} ${timeRemaining}`);
+      console.log(`網路 : ↓:${formatBytes(network[0].rx_sec)}/s / ↑:${formatBytes(network[0].tx_sec)}/s`);
       
       console.log('|s 暫停|c 退出|');
 
